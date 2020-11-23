@@ -6,32 +6,23 @@ import AppTextInput from '../components/AppTextInput';
 import AppButton from '../components/AppButton';
 export default function PasswordReset({ navigation, updateAuthState }) {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+
   async function forgotPassword() {
     try {
       await Auth.forgotPassword(username)
       .then(data =>{ 
           console.log(data);
-          navigation.navigate('SignUp')
+          navigation.navigate('ConfirmPassword')
         })
       .catch(err => console.log(err));
     } catch (error) {
       console.log('❌ Error resetting password...', error);
     }
   }
-  async function newPassword() {
-      try {
-          await Auth.forgotPasswordSubmit(username, code, new_password)
-          .then(data => console.log(data))
-          .catch(err => console.log(err));
-      } catch (error) {
-          console.log('❌ Error resetting password...', error)
-      }
-  }
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Reset password</Text>
+        <Text style={styles.title}>Change password</Text>
         <AppTextInput
           value={username}
           onChangeText={text => setUsername(text)}
@@ -42,9 +33,9 @@ export default function PasswordReset({ navigation, updateAuthState }) {
           textContentType="emailAddress"
         />
         
-        <AppButton title="Reset" onPress={forgotPassword} />
+        <AppButton title="Email Me" onPress={forgotPassword} />
         <View style={styles.footerButtonContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('ConfirmPassword')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
             <Text style={styles.forgotPasswordButtonText}>
               Don't have an account? Sign Up
             </Text>

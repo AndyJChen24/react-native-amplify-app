@@ -7,20 +7,24 @@ import AppButton from '../components/AppButton';
 export default function ConfirmPassword({ navigation, updateAuthState }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  async function signIn() {
+  const [code, setCode] = useState('');
+  async function newPassword() {
     try {
-      await Auth.signIn(username, password);
-      console.log('✅ Success');
-      updateAuthState('loggedIn');
+        await Auth.forgotPasswordSubmit(username, code, password)
+        .then(data => {
+            console.log(data);
+            navigation.navigate('SignIn')
+        })
+        .catch(err => console.log(err));
     } catch (error) {
-      console.log('❌ Error signing in...', error);
+        console.log('❌ Error resetting password...', error)
     }
-  }
+}
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Sign in to your account</Text>
+        <Text style={styles.title}>Enter New Information</Text>
         <AppTextInput
           value={username}
           onChangeText={text => setUsername(text)}
@@ -34,27 +38,23 @@ export default function ConfirmPassword({ navigation, updateAuthState }) {
           value={password}
           onChangeText={text => setPassword(text)}
           leftIcon="lock"
-          placeholder="Enter password"
+          placeholder="Enter new password"
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry
           textContentType="password"
         />
-        <AppButton title="Login" onPress={signIn} />
-        <View style={styles.footerButtonContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-            <Text style={styles.forgotPasswordButtonText}>
-              Don't have an account? Sign Up
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.footerButtonContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('PasswordReset')}>
-            <Text style={styles.forgotPasswordButtonText}>
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <AppTextInput
+          value={code}
+          onChangeText={text => setCode(text)}
+          leftIcon="lock"
+          placeholder="Enter code from email"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry
+          textContentType="password"
+        />
+        <AppButton title="Reset" onPress={newPassword} />
       </View>
     </SafeAreaView>
   );
